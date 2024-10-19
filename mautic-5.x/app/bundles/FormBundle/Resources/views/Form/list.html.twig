@@ -1,0 +1,61 @@
+{#
+  Variables
+    - searchValue
+    - items
+    - totalItems
+    - page
+    - limit
+    - permissions
+    - security
+    - tmpl
+#}
+{% set isIndex = 'index' == tmpl ? true : false %}
+{% set tmpl = 'list' %}
+{% extends isIndex ? '@MauticCore/Default/content.html.twig' : '@MauticCore/Default/raw_output.html.twig' %}
+
+{% block mauticContent %}form{% endblock %}
+
+{% block headerTitle %}
+  {{ 'mautic.form.forms'|trans }}
+{% endblock %}
+
+{% block actions %}
+    {{ include('@MauticCore/Helper/page_actions.html.twig', {
+            'templateButtons': {
+                'new': permissions['form:forms:create'],
+            },
+            'routeBase': 'form',
+            'langVar': 'form.form',
+        }
+    ) }}
+{% endblock %}
+
+{% block content %}
+  {% if isIndex %}
+    <div id="page-list-wrapper">
+      {{ include('@MauticCore/Helper/list_toolbar.html.twig', {
+        'searchValue': searchValue,
+        'searchHelp': 'mautic.form.form.help.searchcommands',
+        'searchId': 'list-search',
+        'action': currentRoute,
+        'quickFilters': [
+            {
+                'search': 'has:results',
+                'label': 'mautic.core.search.quickfilter.form_results',
+                'tooltip': 'mautic.core.search.quickfilter.form_results.tooltip',
+                'icon': 'ri-file-list-2-line'
+            }
+        ]
+    }) }}
+
+        <div class="page-list">
+          {{ include('@MauticForm/Form/_list.html.twig') }}
+        </div>
+    </div>
+    {{ include('@MauticCore/Helper/protip.html.twig', {
+      tip: random(['mautic.protip.forms.redirect', 'mautic.protip.forms.minimize', 'mautic.protip.forms.language', 'mautic.protip.forms.multistep'])
+  }) }}
+  {% else %}
+    {{ include('@MauticForm/Form/_list.html.twig') }}
+  {% endif %}
+{% endblock %}

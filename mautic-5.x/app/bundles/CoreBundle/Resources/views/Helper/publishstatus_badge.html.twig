@@ -1,0 +1,17 @@
+{% set statusColors = {
+    'published': {'icon': 'success', 'text': 'green'},
+    'unpublished': {'icon': 'danger', 'text': 'red'},
+    'expired': {'icon': 'danger', 'text': 'red'},
+    'pending': {'icon': 'warning', 'text': 'yellow'}
+} %}
+
+{% if status is not defined %}
+    {% set labelText = ('mautic.core.form.' ~ (entity.getPublishStatus() == 'published' ? 'active' : 'inactive'))|trans %}
+{% else %}
+    {% set labelText = ('mautic.core.form.' ~ (entity.getPublishStatus() == 'published' ? 'available' : 'unavailable'))|trans %}
+{% endif %}
+
+<div class="label label-{{ statusColors[entity.getPublishStatus()].text }} d-flex ai-center gap-xs fw-b">
+    <span title="{{ labelText }}" aria-label="{{ labelText }}" class="bg-{{ statusColors[entity.getPublishStatus()].icon }} publishstatus_pulse"> </span>
+{{ labelText }}
+</div>
